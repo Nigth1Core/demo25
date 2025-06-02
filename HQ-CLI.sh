@@ -5,11 +5,9 @@ hostnamectl set-hostname hq-cli.au-team.irpo;
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
-
 touch /etc/sudoers
-cat <<EOF /etc/sudoers
+vim /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD:ALL
-EOF
 
 CONFIG_FILE="/etc/openssh/sshd_config"
 
