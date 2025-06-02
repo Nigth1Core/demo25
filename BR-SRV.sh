@@ -1,31 +1,3 @@
-#!/bin/bash
-
-#Переименование виртуалки
-hostnamectl set-hostname br-srv.au-team.irpo; 
-
-#Настройка интерфейсов и времени
-cat <<EOF > /etc/net/ifaces/ens18/options
-TYPE=eth
-DISABLED=no
-NM_CONTROLLED=no
-BOOTPROTO=static
-IPV4_CONFIG=yes
-EOF
-
-touch /etc/net/ifaces/ens18/ipv4address
-cat <<EOF > /etc/net/ifaces/ens18/ipv4address
-192.168.0.30/27
-EOF
-
-touch /etc/net/ifaces/ens18/ipv4route
-cat <<EOF > /etc/net/ifaces/ens18/ipv4route
-default via 192.168.0.1
-EOF
-
-cat <<EOF > /etc/resolv.conf
-nameserver 8.8.8.8
-nameserver 77.88.8.8
-EOF
 
 apt-get update && apt-get install tzdata  
 timedatectl set-timezone Europe/Samara
