@@ -1,57 +1,18 @@
-#!/bin/bash
-
 hostnamectl set-hostname hq-srv.au-team.irpo
-cat <<EOF > /etc/net/ifaces/ens18/options
-TYPE=eth
-DISABLED=no
-NM_CONTROLLED=no
-BOOTPROTO=static
-IPV4_CONFIG=yes
-EOF
-
-touch /etc/net/ifaces/ens18/ipv4address
-cat <<EOF > /etc/net/ifaces/ens18/ipv4address
-192.168.1.62/26
-EOF
-
-touch /etc/net/ifaces/ens18/ipv4route
-cat <<EOF > /etc/net/ifaces/ens18/ipv4route
-default via 192.168.1.1
-EOF
-
-cat <<EOF > /etc/resolv.conf
-nameserver 8.8.8.8
-EOF
-systemctl restart network
 
 #Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
+touch /etc/sudoers
+vim /etc/sudoers
+sshuser ALL=(ALL) NOPASSWD:ALL
+
 
 apt-get update && apt-get install tzdata  
 timedatectl set-timezone Europe/Samara
 
-touch /etc/sudoers
-cat <<EOF /etc/sudoers
-sshuser ALL=(ALL) NOPASSWD:ALL
-EOF
 
-CONFIG_FILE="/etc/openssh/sshd_config"
-
-
-echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
-awk -i inplace '/^#?Port[[:space:]]+22$/ {sub(/^#/,""); sub(/22/,"2024"); print; next} {print}' "$CONFIG_FILE"
-awk -i inplace '/^#?MaxAuthTries[[:space:]]+6$/ {sub(/^#/,""); sub(/6/,"2"); print; next} {print}' "$CONFIG_FILE"
-awk -i inplace '/^#?PasswordAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
-awk -i inplace '/^#?PubkeyAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
-
-touch /etc/openssh/bannermotd  
-cat <<EOF > /etc/openssh/bannermotd 
-Authorized access only  
-EOF  
-
-systemctl restart sshd  
 
 apt-get install -y chrony dnsmasq
 cat <<EOF > /etc/chrony.conf
