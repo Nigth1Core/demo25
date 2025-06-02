@@ -1,4 +1,5 @@
 ТОЛЬКО IP и SSH
+Не забыть etc/resolv.conf
 
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
