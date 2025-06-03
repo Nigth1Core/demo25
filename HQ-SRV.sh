@@ -1,5 +1,5 @@
 hostnamectl set-hostname hq-srv.au-team.irpo
-
+#Файл Сироткиной
 #Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
