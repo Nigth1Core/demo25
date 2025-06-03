@@ -1,6 +1,6 @@
 ТОЛЬКО IP и SSH
 Не забыть etc/resolv.conf
-
+#Файл Сироткиной
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
